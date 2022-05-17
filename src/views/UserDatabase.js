@@ -35,24 +35,27 @@ import {
   ModalFooter
 } from "reactstrap";
 
-import { getDataFromAPI, patchDataToAPI, deleteDataFromAPI } from "../helper/asyncFunction";
+import { getDataFromAPI, postDataToAPI, patchDataToAPI, deleteDataFromAPI } from "../helper/asyncFunction";
 
-class Dashboard extends Component {
+class UserDatabase extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      car_detail: [],
+      user_detail: [],
+      create_form: {},
       edit_form: {},
+      modalCreate: false,
       modalEdit: false,
       modalDelete: false,
       itemToBeEdited: null,
-      itemToBeDeleted: null
+      itemToBeDeleted: null,
+      dataLogin: {}
     };
   }
 
   componentDidMount() {
-    this.getCarDetail();
-    document.title = 'Car Detail | Borongboil';
+    this.getUser();
+    document.title = 'User Database | Borongboil';
     if (localStorage.getItem('login_status')) {
       const getLoginStatus = JSON.parse(localStorage.getItem('login_status'))
       const getLoginData = JSON.parse(getLoginStatus.value)
@@ -78,16 +81,15 @@ class Dashboard extends Component {
     this.refs.notificationAlert.notificationAlert(options);
   }
 
-  toggleModalDelete = (e) => {
+  toggleModalCreate = (e) => {
     this.setState({
-      modalDelete: !this.state.modalDelete,
-      itemToBeDeleted: e
+      modalCreate: !this.state.modalCreate
     });
   }
 
   toggleModalEdit = (e) => {
     const modalEdit = this.state.modalEdit;
-    const carDetailState = this.state.car_detail.find((f) => f._id === e);
+    const carDetailState = this.state.user_detail.find((f) => f._id === e);
     const dataEdit = { ...carDetailState }
     if (!modalEdit) {
       this.setState({ edit_form: dataEdit });
@@ -100,6 +102,13 @@ class Dashboard extends Component {
     });
   }
 
+  toggleModalDelete = (e) => {
+    this.setState({
+      modalDelete: !this.state.modalDelete,
+      itemToBeDeleted: e
+    });
+  }
+
   handleChangeForm = (e) => {
     const value = e.target.value;
     const index = e.target.name;
@@ -108,20 +117,41 @@ class Dashboard extends Component {
     this.setState({ edit_form: dataForm }, () => console.log(this.state.edit_form));
   }
 
-  getCarDetail = () => {
-    getDataFromAPI('/getCarDetail').then(res => {
+  handleChangeFormCreate = (e) => {
+    const value = e.target.value;
+    const index = e.target.name;
+    let dataForm = this.state.create_form;
+    dataForm[index] = value;
+    this.setState({ create_form: dataForm }, () => console.log(this.state.create_form));
+  }
+
+  getUser = () => {
+    getDataFromAPI('/getUser').then(res => {
       if (res.data !== undefined) {
         const items = res.data.data;
-        this.setState({ car_detail: items });
+        this.setState({ user_detail: items });
       }
     })
   }
 
-  patchCarDetail = async () => {
+  createUser = async () => {
+    const dataForm = this.state.create_form;
+    const respondPost = await postDataToAPI("/createUser", dataForm);
+    if (respondPost.data !== undefined && respondPost.status >= 200 && respondPost.status <= 300) {
+      this.notify('tc', 'success', 'User has been created!');
+      setTimeout(function () {
+        window.location.reload();
+      }, 1500);
+    } else {
+      this.notify('tc', 'success', 'Failed to submit data!');
+    }
+  }
+
+  updateUser = async () => {
     const dataEdit = this.state.edit_form;
-    const respondPatch = await patchDataToAPI("/updateCarDetail/" + this.state.itemToBeEdited, dataEdit);
+    const respondPatch = await patchDataToAPI("/updateUser/" + this.state.itemToBeEdited, dataEdit);
     if (respondPatch.data !== undefined && respondPatch.status >= 200 && respondPatch.status <= 300) {
-      this.notify('tc', 'success', 'Car detail has been updated!');
+      this.notify('tc', 'success', 'User has been updated!');
       this.toggleModalEdit();
       setTimeout(function () {
         window.location.reload();
@@ -131,10 +161,10 @@ class Dashboard extends Component {
     }
   }
 
-  deleteCarDetail = () => {
-    deleteDataFromAPI('/deleteCarDetail/' + this.state.itemToBeDeleted).then(res => {
+  deleteUser = () => {
+    deleteDataFromAPI('/deleteUser/' + this.state.itemToBeDeleted).then(res => {
       if (res.data !== undefined) {
-        this.notify('tc', 'success', 'Car detail has been deleted!');
+        this.notify('tc', 'success', 'User has been deleted!');
         this.toggleModalDelete();
         setTimeout(function () {
           window.location.reload();
@@ -155,38 +185,39 @@ class Dashboard extends Component {
           <Col lg="12" md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Dashboard</CardTitle>
+                <Row>
+                  <Col lg="6" md="6" sm="6" xs="6">
+                    <CardTitle tag="h4">User Database</CardTitle>
+                  </Col>
+                  <Col lg="6" md="6" sm="6" xs="6">
+                    <Button color="primary" onClick={this.toggleModalCreate} style={{ float: "right" }}>
+                      <i
+                        className="tim-icons icon-simple-add"
+                        style={{ cursor: "pointer", marginRight: "8px", marginTop: "-3px" }}
+                      />
+                      New User
+                    </Button>
+                  </Col>
+                </Row>
               </CardHeader>
               <CardBody>
                 <Table className="tablesorter" responsive>
                   <thead className="text-primary">
                     <tr>
-                      <th>Merk</th>
-                      <th>Model</th>
-                      <th>Varian</th>
-                      <th>Tahun</th>
-                      <th>Transmisi</th>
-                      <th>Nama</th>
-                      <th>Nomor Telepon</th>
-                      <th>Area Inspeksi</th>
-                      <th>Affiliate</th>
-                      <th>Sub Affiliate</th>
-                      <th>Action</th>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Name</th>
+                      <th>Affiliate Link</th>
+                      <th style={{ textAlign: 'center' }}>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.car_detail && this.state.car_detail.length ? this.state.car_detail.map(e => (
+                    {this.state.user_detail && this.state.user_detail.length ? this.state.user_detail.map(e => (
                       <tr>
-                        <td>{e.merk}</td>
-                        <td>{e.model}</td>
-                        <td>{e.varian}</td>
-                        <td>{e.tahun}</td>
-                        <td>{e.transmisi}</td>
-                        <td>{e.nama}</td>
-                        <td>{e.nomor_telepon}</td>
-                        <td>{e.area_inspeksi}</td>
-                        <td>{e.affiliate}</td>
-                        <td>{e.sub_affiliate}</td>
+                        <td>{e.username}</td>
+                        <td>{e.email}</td>
+                        <td>{e.name}</td>
+                        <td>{e.affiliate_link}</td>
                         <td>
                           <Row>
                             <Col lg="6" md="6" sm="6" xs="6">
@@ -220,7 +251,7 @@ class Dashboard extends Component {
           toggle={this.toggleModalDelete}
         >
           <ModalHeader>
-            Are you sure you want to delete this item?
+            Are you sure you want to delete this user?
             <button
               type="button"
               className="close"
@@ -238,7 +269,7 @@ class Dashboard extends Component {
             <Button color="secondary" onClick={this.toggleModalDelete}>
               No
             </Button>
-            <Button color="danger" onClick={this.deleteCarDetail}>
+            <Button color="danger" onClick={this.deleteUser}>
               Yes
             </Button>
           </ModalFooter>
@@ -247,10 +278,10 @@ class Dashboard extends Component {
         <Modal
           isOpen={this.state.modalEdit}
           toggle={this.toggleModalEdit}
-          style={{ top: '-30%', marginBottom: '7%' }}
+          style={{ marginBottom: '7%' }}
         >
           <ModalHeader>
-            Update Car Detail
+            Update User Detail
             <button
               type="button"
               className="close"
@@ -263,106 +294,118 @@ class Dashboard extends Component {
           </ModalHeader>
           <ModalBody>
             <FormGroup>
-              <Label for="merk">Merk</Label>
+              <Label for="username">Username</Label>
               <Input
                 type="text"
-                name="merk"
-                id="merk"
+                name="username"
+                id="username"
                 style={{ color: '#222a42' }}
-                value={this.state.edit_form.merk}
+                value={this.state.edit_form.username}
                 onChange={this.handleChangeForm}
               />
             </FormGroup>
             <FormGroup>
-              <Label for="model">Model</Label>
+              <Label for="email">Email</Label>
               <Input
                 type="text"
-                name="model"
-                id="model"
+                name="email"
+                id="email"
                 style={{ color: '#222a42' }}
-                value={this.state.edit_form.model}
+                value={this.state.edit_form.email}
                 onChange={this.handleChangeForm}
               />
             </FormGroup>
             <FormGroup>
-              <Label for="varian">Varian</Label>
+              <Label for="name">Name</Label>
               <Input
                 type="text"
-                name="varian"
-                id="varian"
+                name="name"
+                id="name"
                 style={{ color: '#222a42' }}
-                value={this.state.edit_form.varian}
+                value={this.state.edit_form.name}
                 onChange={this.handleChangeForm}
               />
-            </FormGroup>
-            <FormGroup>
-              <Label for="tahun">Tahun</Label>
-              <Input
-                type="number"
-                name="tahun"
-                id="tahun"
-                style={{ color: '#222a42' }}
-                value={this.state.edit_form.tahun}
-                onChange={this.handleChangeForm}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="transmisi">Transmisi</Label>
-              <Input
-                type="select"
-                name="transmisi"
-                id="transmisi"
-                style={{ color: '#222a42' }}
-                value={this.state.edit_form.transmisi}
-                onChange={this.handleChangeForm}
-              >
-                <option value="AT">AT</option>
-                <option value="MT">MT</option>
-              </Input>
-            </FormGroup>
-            <FormGroup>
-              <Label for="nama">Nama</Label>
-              <Input
-                type="text"
-                name="nama"
-                id="nama"
-                style={{ color: '#222a42' }}
-                value={this.state.edit_form.nama}
-                onChange={this.handleChangeForm}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="nomor_telepon">Nomor Telepon</Label>
-              <Input
-                type="number"
-                name="nomor_telepon"
-                id="nomor_telepon"
-                style={{ color: '#222a42' }}
-                value={this.state.edit_form.nomor_telepon}
-                onChange={this.handleChangeForm}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="area_inspeksi">Area Inspeksi</Label>
-              <Input
-                type="select"
-                name="area_inspeksi"
-                id="area_inspeksi"
-                style={{ color: '#222a42' }}
-                value={this.state.edit_form.area_inspeksi}
-                onChange={this.handleChangeForm}
-              >
-                <option value="Jabodetabek">Jabodetabek</option>
-                <option value="Lain">Lain</option>
-              </Input>
             </FormGroup>
           </ModalBody>
           <ModalFooter>
             <Button color="secondary" onClick={this.toggleModalEdit}>
               Close
             </Button>
-            <Button color="primary" onClick={this.patchCarDetail}>
+            <Button color="primary" onClick={this.updateUser}>
               Update
+            </Button>
+          </ModalFooter>
+        </Modal>
+
+        <Modal
+          isOpen={this.state.modalCreate}
+          toggle={this.toggleModalCreate}
+          style={{ marginBottom: '7%' }}
+        >
+          <ModalHeader>
+            Create New User
+            <button
+              type="button"
+              className="close"
+              data-dismiss="modal"
+              aria-hidden="true"
+              onClick={this.toggleModalCreate}
+            >
+              <i className="tim-icons icon-simple-remove" />
+            </button>
+          </ModalHeader>
+          <ModalBody>
+            <FormGroup>
+              <Label for="username">Username</Label>
+              <Input
+                type="text"
+                name="username"
+                id="username"
+                style={{ color: '#222a42' }}
+                value={this.state.create_form.username}
+                onChange={this.handleChangeFormCreate}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="password">Password</Label>
+              <Input
+                type="password"
+                name="password"
+                id="password"
+                style={{ color: '#222a42' }}
+                value={this.state.create_form.password}
+                onChange={this.handleChangeFormCreate}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="email">Email</Label>
+              <Input
+                type="text"
+                name="email"
+                id="email"
+                style={{ color: '#222a42' }}
+                value={this.state.create_form.email}
+                onChange={this.handleChangeFormCreate}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="name">Name</Label>
+              <Input
+                type="text"
+                name="name"
+                id="name"
+                style={{ color: '#222a42' }}
+                value={this.state.create_form.name}
+                onChange={this.handleChangeFormCreate}
+              />
+            </FormGroup>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={this.toggleModalCreate}>
+              Close
+            </Button>
+            <Button color="primary" onClick={this.createUser}>
+              Create
             </Button>
           </ModalFooter>
         </Modal>
@@ -371,4 +414,4 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+export default UserDatabase;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-scroll";
 import styles from '../../style/index.module.css';
 // Assets
-import LogoImg from "../../assets/svg/Logo";
+import logo from "../../assets/svg/Asset-1.svg";
 
 export default function Contact() {
 
@@ -25,13 +25,13 @@ export default function Contact() {
         <div className={`${styles.container}`}>
           <InnerWrapper className={`${styles.flexSpaceCenter}`} style={{ padding: "30px 0" }}>
             <Link className={`${styles.flexCenter} ${styles.animate} ${styles.pointer}`} to="home" smooth={true} offset={-80}>
-              <LogoImg />
+              <img src={logo} width="50" style={{ filter: "invert(93%) sepia(93%) saturate(0%) hue-rotate(251deg) brightness(106%) contrast(105%)" }} />
               <h1 className={`${styles.font15} ${styles.extraBold} ${styles.whiteColor}`} style={{ marginLeft: "15px", ...general, paddingLeft: '10px' }}>
                 borongboil
               </h1>
             </Link>
             <StyleP className={`${styles.whiteColor} ${styles.font13}`}>
-              © {getCurrentYear()} - Borongboil.id All Right Reserved
+              © {getCurrentYear()} - Borongboil.id All Rights Reserved
             </StyleP>
             <Link className={`${styles.whiteColor} ${styles.animate} ${styles.pointer} ${styles.font13}`} to="home" smooth={true} offset={-80} style={{ color: '#fff' }}>
               Back to top

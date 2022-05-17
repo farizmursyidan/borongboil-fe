@@ -141,7 +141,7 @@ class AdminNavbar extends React.Component {
             </button>
             <Collapse navbar isOpen={this.state.collapseOpen}>
               <Nav className="ml-auto" navbar>
-                <InputGroup className="search-bar">
+                {/* <InputGroup className="search-bar">
                   <Button
                     color="link"
                     data-target="#searchModal"
@@ -191,7 +191,7 @@ class AdminNavbar extends React.Component {
                       </DropdownItem>
                     </NavLink>
                   </DropdownMenu>
-                </UncontrolledDropdown>
+                </UncontrolledDropdown> */}
                 <UncontrolledDropdown nav>
                   <DropdownToggle
                     caret

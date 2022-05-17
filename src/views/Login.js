@@ -61,7 +61,7 @@ class Login extends React.Component {
     if (respondLogin.data !== undefined && respondLogin.status >= 200 && respondLogin.status <= 300) {
       // localStorage.setItem('login_status', JSON.stringify(respondLogin));
       const oneDay = 1000 * 60 * 60 * 24;
-      setWithExpiry('login_status', JSON.stringify(respondLogin), oneDay)
+      setWithExpiry('login_status', JSON.stringify(respondLogin.data), oneDay)
       window.location.replace('/admin/dashboard')
     }
   }

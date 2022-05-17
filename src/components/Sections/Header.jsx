@@ -5,7 +5,7 @@ import styles from '../../style/index.module.css';
 import FullButton from "../Buttons/FullButton";
 // Assets
 import HeaderImage from "../../assets/img/heroimage.png";
-import QuotesIcon from "../../assets/svg/Quotes";
+import { Link } from "react-scroll";
 // import Dots from "../../assets/svg/Dots";
 
 export default function Header() {
@@ -18,7 +18,14 @@ export default function Header() {
             Jual mobil tidak perlu repot, dapatkan harga terbaik dan pelayanan terbaik bersama kami. Cukup isi form detail kendaraan anda tim kami akan datang ke tempat anda
           </HeaderP>
           <BtnWrapper>
-            <FullButton title="Cek disini" />
+            <Link
+              to="contact"
+              spy={true}
+              smooth={true}
+              offset={-60}
+            >
+              <FullButton title="Cek disini" />
+            </Link>
           </BtnWrapper>
         </div>
       </LeftSide>

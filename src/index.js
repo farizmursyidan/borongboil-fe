@@ -37,12 +37,13 @@ ReactDOM.render(
   <Router history={hist}>
     <Switch>
 
-      <Route path="/rtl" render={props => <RTLLayout {...props} />} />
-      <Route path="/login" render={props => <Login {...props} />} />
-      <Route path="/landing-page" render={props => <LandingPage {...props} />} />
-      {getWithExpiry('login_status') === null ? (
-        <Redirect from="/" to="/login" />
-      ) : <Route path="/admin" render={props => <AdminLayout {...props} />} />}
+      <Route exact path="/rtl" render={props => <RTLLayout {...props} />} />
+      <Route exact path="/login" render={props => <Login {...props} />} />
+      <Route exact path="/" render={props => <LandingPage {...props} />} />
+      {getWithExpiry('login_status') === null && (
+        <Redirect from="/admin" to="/login" />
+      )}
+      <Route path="/admin" render={props => <AdminLayout {...props} />} />
     </Switch>
   </Router>,
   document.getElementById("root")

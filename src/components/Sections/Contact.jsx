@@ -73,8 +73,14 @@ const options = [
 class Contact extends Component {
   constructor(props) {
     super(props);
+    const queryParams = new URLSearchParams(window.location.search);
+    const aff = queryParams.get('m');
+    const subAff = queryParams.get('sub');
     this.state = {
-      data_form: {},
+      data_form: {
+        affiliate: aff,
+        sub_affiliate: subAff
+      },
       car_database: [],
       car_merk: [],
       car_model: [],
@@ -185,6 +191,9 @@ class Contact extends Component {
   }
 
   render() {
+    if (window.location.host.split(".")[0] === "p") {
+      window.location.replace('https://borongboil.id/?m=putri')
+    }
     return (
       <Wrapper id="contact">
         <div className="react-notification-alert-container">
@@ -214,13 +223,17 @@ class Contact extends Component {
                     <label className={`${styles.font13}`}>Transmisi</label>
                     <Select options={[{ value: 'AT', label: 'AT', name: 'transmisi' }, { value: 'MT', label: 'MT', name: 'transmisi' }]} onChange={this.handleChangeFormSelect} value={{ value: this.state.data_form.transmisi, label: this.state.data_form.transmisi }} />
                   </FormGroup>
+                  <FormGroup>
+                    <label className={`${styles.font13}`}>Area Inspeksi</label>
+                    <Select options={[{ value: 'Jabodetabek', label: 'Jabodetabek', name: 'area_inspeksi' }, { value: 'Lain', label: 'Lain', name: 'area_inspeksi' }]} onChange={this.handleChangeFormSelect} value={{ value: this.state.data_form.area_inspeksi, label: this.state.data_form.area_inspeksi }} />
+                  </FormGroup>
                 </Form>
               </div>
               <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                 <Form>
                   <FormGroup>
                     <label className={`${styles.font13}`}>Tahun</label>
-                    <input type="number" name="tahun" className={`${styles.font20} ${styles.extraBold}`} value={this.state.data_form.tahun} onChange={this.handleChangeForm} />
+                    <input type="number" min={0} name="tahun" className={`${styles.font20} ${styles.extraBold}`} value={this.state.data_form.tahun} onChange={this.handleChangeForm} />
                   </FormGroup>
                   <FormGroup>
                     <label className={`${styles.font13}`}>Nama</label>
@@ -230,13 +243,17 @@ class Contact extends Component {
                     <label className={`${styles.font13}`}>Nomor Telepon</label>
                     <input type="text" name="nomor_telepon" className={`${styles.font20} ${styles.extraBold}`} value={this.state.data_form.nomor_telepon} onChange={this.handleChangeForm} />
                   </FormGroup>
-                  <FormGroup>
-                    <label className={`${styles.font13}`}>Area Inspeksi</label>
-                    <Select options={[{ value: 'Jabodetabek', label: 'Jabodetabek', name: 'area_inspeksi' }, { value: 'Lain', label: 'Lain', name: 'area_inspeksi' }]} onChange={this.handleChangeFormSelect} value={{ value: this.state.data_form.area_inspeksi, label: this.state.data_form.area_inspeksi }} />
+                  <FormGroup hidden>
+                    <label className={`${styles.font13}`}>Affiliate</label>
+                    <input type="text" name="affiliate" className={`${styles.font20} ${styles.extraBold}`} value={this.state.data_form.affiliate} onChange={this.handleChangeForm} />
+                  </FormGroup>
+                  <FormGroup hidden>
+                    <label className={`${styles.font13}`}>Sub Affiliate</label>
+                    <input type="text" name="sub_affiliate" className={`${styles.font20} ${styles.extraBold}`} value={this.state.data_form.sub_affiliate} onChange={this.handleChangeForm} />
                   </FormGroup>
                 </Form>
               </div>
-              <div div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={{ marginTop: 16 }}>
                 <SumbitWrapper className={`${styles.flex}`}>
                   <ButtonInput type="submit" value="Send Message" className={`${styles.pointer} ${styles.animate} ${styles.radius8}`} style={{ maxWidth: "220px" }} onClick={this.postCarDetail} />
                 </SumbitWrapper>

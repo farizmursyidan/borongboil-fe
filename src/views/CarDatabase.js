@@ -17,6 +17,7 @@
 */
 import React, { Component } from "react";
 import NotificationAlert from "react-notification-alert";
+import Pagination from "react-js-pagination";
 import {
   Button,
   Card,
@@ -46,13 +47,21 @@ class CarDatabase extends Component {
       modalEdit: false,
       modalDelete: false,
       itemToBeEdited: null,
-      itemToBeDeleted: null
+      itemToBeDeleted: null,
+      activePage: 1,
+      totalData: 0,
+      perPage: 10,
     };
   }
 
   componentDidMount() {
     this.getCarDatabase();
-    document.title = 'Car Detail | Borongboil';
+    document.title = 'Car Database | Borongboil';
+    if (localStorage.getItem('login_status')) {
+      const getLoginStatus = JSON.parse(localStorage.getItem('login_status'))
+      const getLoginData = JSON.parse(getLoginStatus.value)
+      this.setState({ dataLogin: getLoginData })
+    }
   }
 
   notify = (place, type, message) => {
@@ -71,6 +80,12 @@ class CarDatabase extends Component {
       autoDismiss: 7
     };
     this.refs.notificationAlert.notificationAlert(options);
+  }
+
+  handlePageChange = (pageNumber) => {
+    this.setState({ activePage: pageNumber }, () => {
+      this.getCarDatabase();
+    });
   }
 
   toggleModalDelete = (e) => {
@@ -104,10 +119,13 @@ class CarDatabase extends Component {
   }
 
   getCarDatabase = () => {
-    getDataFromAPI('/getCarDatabase').then(res => {
+    const page = this.state.activePage;
+    const maxPage = this.state.perPage;
+    getDataFromAPI(`/getCarDatabase?lmt=${maxPage}&pg=${page}`).then(res => {
       if (res.data !== undefined) {
         const items = res.data.data;
-        this.setState({ car_detail: items });
+        const totalData = res.data.totalResults;
+        this.setState({ car_detail: items, totalData: totalData });
       }
     })
   }
@@ -170,18 +188,19 @@ class CarDatabase extends Component {
                         <td>{e.varian}</td>
                         <td>
                           <Row>
-                            <Col md="6" className="d-flex justify-content-center">
+                            <Col lg="6" md="6" sm="6" xs="6">
                               <i
                                 className="tim-icons icon-pencil"
-                                style={{ cursor: "pointer" }}
+                                style={{ cursor: "pointer", float: "right" }}
                                 onClick={(f) => this.toggleModalEdit(e._id)}
                               />
                             </Col>
-                            <Col md="6" className="d-flex justify-content-center">
+                            <Col lg="6" md="6" sm="6" xs="6">
                               <i
                                 className="tim-icons icon-trash-simple"
-                                style={{ cursor: "pointer" }}
+                                style={{ cursor: "pointer", float: "left" }}
                                 onClick={(f) => this.toggleModalDelete(e._id)}
+                                hidden={this.state.dataLogin.role !== 'superadmin'}
                               />
                             </Col>
                           </Row>
@@ -190,6 +209,15 @@ class CarDatabase extends Component {
                     )) : <tr><td colSpan="9" className="text-center">No Data Available</td></tr>}
                   </tbody>
                 </Table>
+                <Pagination
+                  activePage={this.state.activePage}
+                  itemsCountPerPage={this.state.perPage}
+                  totalItemsCount={this.state.totalData}
+                  pageRangeDisplayed={5}
+                  onChange={this.handlePageChange}
+                  itemClass="page-item"
+                  linkClass="page-link"
+                />
               </CardBody>
             </Card>
           </Col>
