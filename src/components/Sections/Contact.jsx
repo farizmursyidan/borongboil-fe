@@ -79,7 +79,8 @@ class Contact extends Component {
     this.state = {
       data_form: {
         affiliate: aff,
-        sub_affiliate: subAff
+        sub_affiliate: subAff,
+        flag: "Web"
       },
       car_database: [],
       car_merk: [],

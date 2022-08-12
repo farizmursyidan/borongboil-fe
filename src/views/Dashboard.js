@@ -17,6 +17,7 @@
 */
 import React, { Component } from "react";
 import NotificationAlert from "react-notification-alert";
+import Pagination from "react-js-pagination";
 import {
   Button,
   Card,
@@ -42,16 +43,21 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       car_detail: [],
+      user_list: [],
       edit_form: {},
       modalEdit: false,
       modalDelete: false,
       itemToBeEdited: null,
-      itemToBeDeleted: null
+      itemToBeDeleted: null,
+      activePage: 1,
+      totalData: 0,
+      perPage: 10,
     };
   }
 
   componentDidMount() {
     this.getCarDetail();
+    this.getUser();
     document.title = 'Car Detail | Borongboil';
     if (localStorage.getItem('login_status')) {
       const getLoginStatus = JSON.parse(localStorage.getItem('login_status'))
@@ -76,6 +82,12 @@ class Dashboard extends Component {
       autoDismiss: 7
     };
     this.refs.notificationAlert.notificationAlert(options);
+  }
+
+  handlePageChange = (pageNumber) => {
+    this.setState({ activePage: pageNumber }, () => {
+      this.getCarDetail();
+    });
   }
 
   toggleModalDelete = (e) => {
@@ -109,10 +121,13 @@ class Dashboard extends Component {
   }
 
   getCarDetail = () => {
-    getDataFromAPI('/getCarDetail').then(res => {
-      if (res.data !== undefined) {
+    const page = this.state.activePage;
+    const maxPage = this.state.perPage;
+    getDataFromAPI(`/getCarDetail?srt=_id:-1&lmt=${maxPage}&pg=${page}`).then(res => {
+      if (res.data !== undefined && res.status >= 200 && res.status <= 300) {
         const items = res.data.data;
-        this.setState({ car_detail: items });
+        const totalData = res.data.totalResults;
+        this.setState({ car_detail: items, totalData: totalData });
       }
     })
   }
@@ -145,6 +160,15 @@ class Dashboard extends Component {
     })
   }
 
+  getUser = () => {
+    getDataFromAPI('/getUser').then(res => {
+      if (res.data !== undefined && res.status >= 200 && res.status <= 300) {
+        const items = res.data.data;
+        this.setState({ user_list: items });
+      }
+    })
+  }
+
   render() {
     return (
       <div className="content">
@@ -161,32 +185,48 @@ class Dashboard extends Component {
                 <Table className="tablesorter" responsive>
                   <thead className="text-primary">
                     <tr>
-                      <th>Merk</th>
-                      <th>Model</th>
-                      <th>Varian</th>
-                      <th>Tahun</th>
-                      <th>Transmisi</th>
-                      <th>Nama</th>
-                      <th>Nomor Telepon</th>
-                      <th>Area Inspeksi</th>
-                      <th>Affiliate</th>
-                      <th>Sub Affiliate</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>ID</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Merk</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Model</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Varian</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Tahun</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Transmisi</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Nama</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Nomor Telepon</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Area Inspeksi</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Affiliate</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Sub Affiliate</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Marketing Handler</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Inspector Handler</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Flag</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Update Status</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Harga Permintaan</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Harga Penawaran Terakhir</th>
+                      <th style={{ minWidth: 150, textAlign: 'center' }}>Harga Final</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {this.state.car_detail && this.state.car_detail.length ? this.state.car_detail.map(e => (
                       <tr>
-                        <td>{e.merk}</td>
-                        <td>{e.model}</td>
-                        <td>{e.varian}</td>
-                        <td>{e.tahun}</td>
-                        <td>{e.transmisi}</td>
-                        <td>{e.nama}</td>
-                        <td>{e.nomor_telepon}</td>
-                        <td>{e.area_inspeksi}</td>
-                        <td>{e.affiliate}</td>
-                        <td>{e.sub_affiliate}</td>
+                        <td style={{ textAlign: 'center' }}>{e.cl_id}</td>
+                        <td style={{ textAlign: 'center' }}>{e.merk}</td>
+                        <td style={{ textAlign: 'center' }}>{e.model}</td>
+                        <td style={{ textAlign: 'center' }}>{e.varian}</td>
+                        <td style={{ textAlign: 'center' }}>{e.tahun}</td>
+                        <td style={{ textAlign: 'center' }}>{e.transmisi}</td>
+                        <td style={{ textAlign: 'center' }}>{e.nama}</td>
+                        <td style={{ textAlign: 'center' }}>{e.nomor_telepon}</td>
+                        <td style={{ textAlign: 'center' }}>{e.area_inspeksi}</td>
+                        <td style={{ textAlign: 'center' }}>{e.affiliate}</td>
+                        <td style={{ textAlign: 'center' }}>{e.sub_affiliate}</td>
+                        <td style={{ textAlign: 'center' }}>{e.marketing_handler}</td>
+                        <td style={{ textAlign: 'center' }}>{e.inspector_handler}</td>
+                        <td style={{ textAlign: 'center' }}>{e.flag}</td>
+                        <td style={{ textAlign: 'center' }}>{e.update_status}</td>
+                        <td style={{ textAlign: 'center' }}>{e.harga_permintaan}</td>
+                        <td style={{ textAlign: 'center' }}>{e.harga_penawaran_terakhir}</td>
+                        <td style={{ textAlign: 'center' }}>{e.harga_final}</td>
                         <td>
                           <Row>
                             <Col lg="6" md="6" sm="6" xs="6">
@@ -201,7 +241,7 @@ class Dashboard extends Component {
                                 className="tim-icons icon-trash-simple"
                                 style={{ cursor: "pointer", float: "left" }}
                                 onClick={(f) => this.toggleModalDelete(e._id)}
-                                hidden={this.state.dataLogin.role !== 'superadmin'}
+                                hidden={this.state.dataLogin.data.role !== 'superadmin'}
                               />
                             </Col>
                           </Row>
@@ -210,6 +250,15 @@ class Dashboard extends Component {
                     )) : <tr><td colSpan="9" className="text-center">No Data Available</td></tr>}
                   </tbody>
                 </Table>
+                <Pagination
+                  activePage={this.state.activePage}
+                  itemsCountPerPage={this.state.perPage}
+                  totalItemsCount={this.state.totalData}
+                  pageRangeDisplayed={5}
+                  onChange={this.handlePageChange}
+                  itemClass="page-item"
+                  linkClass="page-link"
+                />
               </CardBody>
             </Card>
           </Col>
@@ -247,7 +296,7 @@ class Dashboard extends Component {
         <Modal
           isOpen={this.state.modalEdit}
           toggle={this.toggleModalEdit}
-          style={{ top: '-30%', marginBottom: '7%' }}
+          style={{ top: '-50%', marginBottom: '7%' }}
         >
           <ModalHeader>
             Update Car Detail
@@ -355,6 +404,92 @@ class Dashboard extends Component {
                 <option value="Jabodetabek">Jabodetabek</option>
                 <option value="Lain">Lain</option>
               </Input>
+            </FormGroup>
+            <FormGroup>
+              <Label for="marketing_handler">Marketing Handler</Label>
+              <Input
+                type="select"
+                name="marketing_handler"
+                id="marketing_handler"
+                style={{ color: '#222a42' }}
+                value={this.state.edit_form.marketing_handler}
+                onChange={this.handleChangeForm}
+              >
+                <option disabled selected hidden>Please select a user</option>
+                {this.state.user_list.map((e) => (
+                  <option value={e.username}>{e.name + ' (' + e.username + ')'}</option>
+                ))}
+              </Input>
+            </FormGroup>
+            <FormGroup>
+              <Label for="inspector_handler">Inspector Handler</Label>
+              <Input
+                type="select"
+                name="inspector_handler"
+                id="inspector_handler"
+                style={{ color: '#222a42' }}
+                value={this.state.edit_form.inspector_handler}
+                onChange={this.handleChangeForm}
+              >
+                <option disabled selected hidden>Please select a user</option>
+                {this.state.user_list.map((e) => (
+                  <option value={e.username}>{e.name + ' (' + e.username + ')'}</option>
+                ))}
+              </Input>
+            </FormGroup>
+            <FormGroup>
+              <Label for="update_status">Update Status</Label>
+              <Input
+                type="select"
+                name="update_status"
+                id="update_status"
+                style={{ color: '#222a42' }}
+                value={this.state.edit_form.update_status}
+                onChange={this.handleChangeForm}
+              >
+                <option disabled selected hidden>Please select a status</option>
+                <option value="Menunggu Konfirmasi">Menunggu Konfirmasi</option>
+                <option value="Siap Di lakukan Inspeksi">Siap Di lakukan Inspeksi</option>
+                <option value="Proses Negosiasi">Proses Negosiasi</option>
+                <option value="Selesai - Mobil Di bayar">Selesai - Mobil Di bayar</option>
+                <option value="Selesai - Batal">Selesai - Batal</option>
+              </Input>
+            </FormGroup>
+            <FormGroup>
+              <Label for="harga_permintaan">Harga Permintaan</Label>
+              <Input
+                type="number"
+                min={0}
+                name="harga_permintaan"
+                id="harga_permintaan"
+                style={{ color: '#222a42' }}
+                value={this.state.edit_form.harga_permintaan}
+                onChange={this.handleChangeForm}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="harga_penawaran_terakhir">Harga Penawaran Terakhir</Label>
+              <Input
+                type="number"
+                min={0}
+                name="harga_penawaran_terakhir"
+                id="harga_penawaran_terakhir"
+                style={{ color: '#222a42' }}
+                value={this.state.edit_form.harga_penawaran_terakhir}
+                onChange={this.handleChangeForm}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="harga_final">Harga Final</Label>
+              <Input
+                type="number"
+                min={0}
+                name="harga_final"
+                id="harga_final"
+                style={{ color: '#222a42' }}
+                value={this.state.edit_form.harga_final}
+                onChange={this.handleChangeForm}
+              />
             </FormGroup>
           </ModalBody>
           <ModalFooter>

@@ -122,7 +122,7 @@ class CarDatabase extends Component {
     const page = this.state.activePage;
     const maxPage = this.state.perPage;
     getDataFromAPI(`/getCarDatabase?lmt=${maxPage}&pg=${page}`).then(res => {
-      if (res.data !== undefined) {
+      if (res.data !== undefined && res.status >= 200 && res.status <= 300) {
         const items = res.data.data;
         const totalData = res.data.totalResults;
         this.setState({ car_detail: items, totalData: totalData });
