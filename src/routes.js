@@ -19,6 +19,7 @@ import Dashboard from "views/Dashboard.js";
 import CarDatabase from "views/CarDatabase.js";
 import UploadCarDatabase from "views/UploadCarDatabase.js";
 import UserDatabase from "views/UserDatabase.js";
+import InspectionReport from "views/InspectionReport.js";
 // import Icons from "views/Icons.js";
 
 var routes = [
@@ -48,6 +49,13 @@ var routes = [
     name: "User Database",
     icon: "tim-icons icon-single-02",
     component: UserDatabase,
+    layout: "/admin"
+  },
+  {
+    path: "/inspection-report/:id",
+    name: "Inspection Report",
+    icon: "tim-icons icon-single-02",
+    component: InspectionReport,
     layout: "/admin"
   },
   // {

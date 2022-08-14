@@ -23,6 +23,30 @@ export const getDataFromAPI = async (url) => {
   }
 };
 
+export const getDatafromAPINODEFile = async (url) => {
+  try {
+    let respond = await axios.get(process.env.REACT_APP_API + url, {
+      responseType: "blob",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      auth: {
+        username: process.env.REACT_APP_user,
+        password: process.env.REACT_APP_pass,
+      },
+      withCredentials: true
+    });
+    if (respond.status >= 200 && respond.status < 300) {
+      console.log("respond Post Data", respond);
+    }
+    return respond;
+  } catch (err) {
+    let respond = err;
+    console.log("respond Post Data err", err);
+    return respond;
+  }
+};
+
 export const postDataToAPI = async (url, data) => {
   try {
     let respond = await axios.post(process.env.REACT_APP_API + url, data, {

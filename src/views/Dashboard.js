@@ -185,6 +185,7 @@ class Dashboard extends Component {
                 <Table className="tablesorter" responsive>
                   <thead className="text-primary">
                     <tr>
+                      <th style={{ textAlign: 'center' }}>Action</th>
                       <th style={{ minWidth: 150, textAlign: 'center' }}>ID</th>
                       <th style={{ minWidth: 150, textAlign: 'center' }}>Merk</th>
                       <th style={{ minWidth: 150, textAlign: 'center' }}>Model</th>
@@ -203,12 +204,22 @@ class Dashboard extends Component {
                       <th style={{ minWidth: 150, textAlign: 'center' }}>Harga Permintaan</th>
                       <th style={{ minWidth: 150, textAlign: 'center' }}>Harga Penawaran Terakhir</th>
                       <th style={{ minWidth: 150, textAlign: 'center' }}>Harga Final</th>
-                      <th>Action</th>
+                      <th style={{ textAlign: 'center' }}>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {this.state.car_detail && this.state.car_detail.length ? this.state.car_detail.map(e => (
                       <tr>
+                        <td style={{ textAlign: 'center' }}>
+                          <Row>
+                            <Col lg="12" md="12" sm="12" xs="12">
+                              <i
+                                className="tim-icons icon-paper"
+                                style={{ cursor: "pointer", float: "right" }}
+                              />
+                            </Col>
+                          </Row>
+                        </td>
                         <td style={{ textAlign: 'center' }}>{e.cl_id}</td>
                         <td style={{ textAlign: 'center' }}>{e.merk}</td>
                         <td style={{ textAlign: 'center' }}>{e.model}</td>
@@ -247,7 +258,7 @@ class Dashboard extends Component {
                           </Row>
                         </td>
                       </tr>
-                    )) : <tr><td colSpan="9" className="text-center">No Data Available</td></tr>}
+                    )) : <tr><td colSpan="20" className="text-center">No Data Available</td></tr>}
                   </tbody>
                 </Table>
                 <Pagination
