@@ -18,6 +18,7 @@
 import React, { Component } from "react";
 import NotificationAlert from "react-notification-alert";
 import Pagination from "react-js-pagination";
+import { Link } from "react-router-dom";
 import {
   Button,
   Card,
@@ -211,14 +212,16 @@ class Dashboard extends Component {
                     {this.state.car_detail && this.state.car_detail.length ? this.state.car_detail.map(e => (
                       <tr>
                         <td style={{ textAlign: 'center' }}>
-                          <Row>
-                            <Col lg="12" md="12" sm="12" xs="12">
-                              <i
-                                className="tim-icons icon-paper"
-                                style={{ cursor: "pointer", float: "right" }}
-                              />
-                            </Col>
-                          </Row>
+                          <Link to={"/admin/inspection-report/" + e.cl_id}>
+                            <Row>
+                              <Col lg="12" md="12" sm="12" xs="12">
+                                <i
+                                  className="tim-icons icon-paper"
+                                  style={{ cursor: "pointer", float: "right" }}
+                                />
+                              </Col>
+                            </Row>
+                          </Link>
                         </td>
                         <td style={{ textAlign: 'center' }}>{e.cl_id}</td>
                         <td style={{ textAlign: 'center' }}>{e.merk}</td>
@@ -261,16 +264,16 @@ class Dashboard extends Component {
                     )) : <tr><td colSpan="20" className="text-center">No Data Available</td></tr>}
                   </tbody>
                 </Table>
-                <Pagination
-                  activePage={this.state.activePage}
-                  itemsCountPerPage={this.state.perPage}
-                  totalItemsCount={this.state.totalData}
-                  pageRangeDisplayed={5}
-                  onChange={this.handlePageChange}
-                  itemClass="page-item"
-                  linkClass="page-link"
-                />
               </CardBody>
+              <Pagination
+                activePage={this.state.activePage}
+                itemsCountPerPage={this.state.perPage}
+                totalItemsCount={this.state.totalData}
+                pageRangeDisplayed={5}
+                onChange={this.handlePageChange}
+                itemClass="page-item"
+                linkClass="page-link"
+              />
             </Card>
           </Col>
         </Row>

@@ -194,6 +194,16 @@ class Contact extends Component {
   render() {
     if (window.location.host.split(".")[0] === "p") {
       window.location.replace('https://borongboil.id/?m=putri')
+    } else if (window.location.host.split(".")[0] === "yeyenlidya") {
+      window.location.replace('https://borongboil.id/?m=yeyenlidya')
+    } else if (window.location.host.split(".")[0] === "yl") {
+      window.location.replace('https://borongboil.id/?m=yeyenlidya')
+    } else if (window.location.host.split(".")[0] === "vernyhasan") {
+      window.location.replace('https://borongboil.id/?m=vernyhasan')
+    } else if (window.location.host.split(".")[0] === "ugithalita") {
+      window.location.replace('https://borongboil.id/?m=ugithalita')
+    } else if (window.location.host.split(".")[0] === "vh") {
+      window.location.replace('https://borongboil.id/?m=vernyhasan')
     }
     return (
       <Wrapper id="contact">

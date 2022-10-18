@@ -43,7 +43,7 @@ class InspectionReport extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inspection_report: [],
+      inspection_report: {},
       foto_kendaraan: []
     };
   }
@@ -180,496 +180,501 @@ class InspectionReport extends Component {
         </div>
         <Row>
           <Col lg="12" md="12">
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Inspection Report</CardTitle>
-              </CardHeader>
-              <CardBody>
-                {/* <ReactToPrint
+            {Object.keys(this.state.inspection_report).length > 0 ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle tag="h4">Inspection Report</CardTitle>
+                </CardHeader>
+                <CardBody>
+                  {/* <ReactToPrint
                   trigger={() => <Button style={{ float: 'right' }} size="sm"><i className="tim-icons icon-single-02" style={{ marginRight: "8px" }}></i>Download Inspection Report</Button>}
                   content={() => this.componentRef}
                 /> */}
-                <div id_drf={this.props.match.params.id} ref={el => (this.componentRef = el)}>
-                  <Table responsive>
-                    <thead style={{ backgroundColor: 'red' }}>
-                      <tr>
-                        <th style={{ color: 'white', fontSize: 20 }}>Laporan Kondisi Kendaraan No. {this.state.inspection_report && this.state.inspection_report.informasi_umum && this.state.inspection_report.informasi_umum.cl_id}</th>
-                        <th style={{ color: 'white', fontSize: 20, textAlign: 'right' }}>Tanggal Inspeksi: 08/11/2022</th>
-                      </tr>
-                    </thead>
-                  </Table>
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_informasi_umum && this.state.inspection_report && this.state.inspection_report.informasi_umum && this.state.keys_informasi_umum.map((e, i) => (
-                            e !== 'cl_id' && i < 10 && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ').replace('no', 'no.')}</td>
-                                <td>{this.state.inspection_report.informasi_umum[e]}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_informasi_umum && this.state.inspection_report && this.state.inspection_report.informasi_umum && this.state.keys_informasi_umum.map((e, i) => (
-                            e !== 'cl_id' && i >= 10 && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ').replace('no', 'no.')}</td>
-                                <td>{[14, 18].includes(i) ? convertDateFormat(this.state.inspection_report.informasi_umum[e]) : this.state.inspection_report.informasi_umum[e]}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <Table responsive>
-                    <thead style={{ backgroundColor: 'red' }}>
-                      <tr>
-                        <th style={{ color: 'white', fontSize: 20 }}>Dokumen</th>
-                      </tr>
-                    </thead>
-                  </Table>
-                  {this.keterangan()}
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_dokumen && this.state.inspection_report && this.state.inspection_report.dokumen && this.state.keys_dokumen.map((e, i) => (
-                            i < Math.floor(this.state.keys_dokumen.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{i === 0 ? e.toUpperCase() : e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.dokumen[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_dokumen && this.state.inspection_report && this.state.inspection_report.dokumen && this.state.keys_dokumen.map((e, i) => (
-                            i >= Math.floor(this.state.keys_dokumen.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{i === 2 ? e.toUpperCase() : e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.dokumen[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <Table responsive>
-                    <thead style={{ backgroundColor: 'red' }}>
-                      <tr>
-                        <th style={{ color: 'white', fontSize: 20 }}>Fitur</th>
-                      </tr>
-                    </thead>
-                  </Table>
-                  {this.keterangan()}
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_fitur && this.state.inspection_report && this.state.inspection_report.fitur && this.state.keys_fitur.map((e, i) => (
-                            i < Math.floor(this.state.keys_fitur.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.fitur[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_fitur && this.state.inspection_report && this.state.inspection_report.fitur && this.state.keys_fitur.map((e, i) => (
-                            i >= Math.floor(this.state.keys_fitur.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.fitur[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <Table responsive>
-                    <thead style={{ backgroundColor: 'red' }}>
-                      <tr>
-                        <th style={{ color: 'white', fontSize: 20 }}>Data Ban</th>
-                      </tr>
-                    </thead>
-                  </Table>
-                  {this.keterangan()}
-                  <Row>
-                    <Col md='6'>
-                      <Table responsive>
-                        <thead>
-                          <tr>
-                            <th style={{ textAlign: 'center' }}>Posisi Ban</th>
-                            <th style={{ textAlign: 'center' }}>Tipe Velg</th>
-                            <th style={{ textAlign: 'center' }}>Ketebalan Ban</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {this.state.keys_data_ban_tipe_velg && this.state.keys_data_ban_ketebalan_ban && this.state.inspection_report && this.state.inspection_report.data_ban && this.state.inspection_report.data_ban.tipe_velg && this.state.keys_data_ban_tipe_velg.map((e, i) => (
-                            (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize', textAlign: 'center' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ textAlign: 'center' }}>{this.state.inspection_report.data_ban.tipe_velg[e]}</td>
-                                <td style={{ textAlign: 'center' }}>{this.symbolConverter(this.state.inspection_report.data_ban.ketebalan_ban[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <Table responsive>
-                    <thead style={{ backgroundColor: 'red' }}>
-                      <tr>
-                        <th style={{ color: 'white', fontSize: 20 }}>Poin Inspeksi</th>
-                      </tr>
-                    </thead>
-                  </Table>
-                  {this.keterangan()}
-                  <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Interior - Dashboard & Kelistrikan</strong></div>
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_interior_dashboard_kelistrikan && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.dashboard_kelistrikan && this.state.keys_interior_dashboard_kelistrikan.map((e, i) => (
-                            i < Math.floor(this.state.keys_interior_dashboard_kelistrikan.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.dashboard_kelistrikan[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_interior_dashboard_kelistrikan && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.dashboard_kelistrikan && this.state.keys_interior_dashboard_kelistrikan.map((e, i) => (
-                            i >= Math.floor(this.state.keys_interior_dashboard_kelistrikan.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.dashboard_kelistrikan[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Interior - Instrumen</strong></div>
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_interior_instrumen && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.instrumen && this.state.keys_interior_instrumen.map((e, i) => (
-                            i < Math.floor(this.state.keys_interior_instrumen.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.instrumen[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_interior_instrumen && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.instrumen && this.state.keys_interior_instrumen.map((e, i) => (
-                            i >= Math.floor(this.state.keys_interior_instrumen.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.instrumen[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Interior - Jok & Trim</strong></div>
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_interior_jok_trim && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.jok_trim && this.state.keys_interior_jok_trim.map((e, i) => (
-                            i < Math.floor(this.state.keys_interior_jok_trim.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.jok_trim[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_interior_jok_trim && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.jok_trim && this.state.keys_interior_jok_trim.map((e, i) => (
-                            i >= Math.floor(this.state.keys_interior_jok_trim.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.jok_trim[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Eksterior - Body</strong></div>
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_eksterior_body && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.body && this.state.keys_eksterior_body.map((e, i) => (
-                            i < Math.floor(this.state.keys_eksterior_body.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.body[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_eksterior_body && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.body && this.state.keys_eksterior_body.map((e, i) => (
-                            i >= Math.floor(this.state.keys_eksterior_body.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.body[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Eksterior - Kaca & Lampu</strong></div>
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_eksterior_kaca_lampu && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.kaca_lampu && this.state.keys_eksterior_kaca_lampu.map((e, i) => (
-                            i < Math.floor(this.state.keys_eksterior_kaca_lampu.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.kaca_lampu[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_eksterior_kaca_lampu && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.kaca_lampu && this.state.keys_eksterior_kaca_lampu.map((e, i) => (
-                            i >= Math.floor(this.state.keys_eksterior_kaca_lampu.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.kaca_lampu[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Eksterior - Under Body</strong></div>
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_eksterior_under_body && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.under_body && this.state.keys_eksterior_under_body.map((e, i) => (
-                            i < Math.floor(this.state.keys_eksterior_under_body.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.under_body[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_eksterior_under_body && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.under_body && this.state.keys_eksterior_under_body.map((e, i) => (
-                            i >= Math.floor(this.state.keys_eksterior_under_body.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.under_body[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Mesin - Oli & Cairan</strong></div>
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_mesin_oli_dan_cairan && this.state.inspection_report && this.state.inspection_report.mesin && this.state.inspection_report.mesin.oli_dan_cairan && this.state.keys_mesin_oli_dan_cairan.map((e, i) => (
-                            i < Math.floor(this.state.keys_mesin_oli_dan_cairan.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ').replace('at', 'AT')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.mesin.oli_dan_cairan[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_mesin_oli_dan_cairan && this.state.inspection_report && this.state.inspection_report.mesin && this.state.inspection_report.mesin.oli_dan_cairan && this.state.keys_mesin_oli_dan_cairan.map((e, i) => (
-                            i >= Math.floor(this.state.keys_mesin_oli_dan_cairan.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.mesin.oli_dan_cairan[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Mesin - Ruang Mesin</strong></div>
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_mesin_ruang_mesin && this.state.inspection_report && this.state.inspection_report.mesin && this.state.inspection_report.mesin.ruang_mesin && this.state.keys_mesin_ruang_mesin.map((e, i) => (
-                            i < Math.floor(this.state.keys_mesin_ruang_mesin.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.mesin.ruang_mesin[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_mesin_ruang_mesin && this.state.inspection_report && this.state.inspection_report.mesin && this.state.inspection_report.mesin.ruang_mesin && this.state.keys_mesin_ruang_mesin.map((e, i) => (
-                            i >= Math.floor(this.state.keys_mesin_ruang_mesin.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.mesin.ruang_mesin[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Tambahan - Kelengkapan</strong></div>
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_tambahan_kelengkapan && this.state.inspection_report && this.state.inspection_report.tambahan_kelengkapan && this.state.keys_tambahan_kelengkapan.map((e, i) => (
-                            i < Math.floor(this.state.keys_tambahan_kelengkapan.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.tambahan_kelengkapan[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_tambahan_kelengkapan && this.state.inspection_report && this.state.inspection_report.tambahan_kelengkapan && this.state.keys_tambahan_kelengkapan.map((e, i) => (
-                            i >= Math.floor(this.state.keys_tambahan_kelengkapan.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.tambahan_kelengkapan[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Test Drive</strong></div>
-                  <Row>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_test_drive && this.state.inspection_report && this.state.inspection_report.test_drive && this.state.keys_test_drive.map((e, i) => (
-                            i < Math.floor(this.state.keys_test_drive.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.test_drive[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                    <Col>
-                      <Table responsive>
-                        <tbody>
-                          {this.state.keys_test_drive && this.state.inspection_report && this.state.inspection_report.test_drive && this.state.keys_test_drive.map((e, i) => (
-                            i >= Math.floor(this.state.keys_test_drive.length / 2) && (
-                              <tr>
-                                <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
-                                <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.test_drive[e])}</td>
-                              </tr>
-                            )
-                          ))}
-                        </tbody>
-                      </Table>
-                    </Col>
-                  </Row>
-                  <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Foto Kendaraan</strong></div>
-                  <Row>
-                    {this.state.foto_kendaraan.map((row, idx) =>
-                      <Col md="3" lg="3" style={{ textAlign: 'center', margin: '20px 0px' }}>
-                        <Row style={{ marginBottom: 16 }}>
-                          <Col style={{ textAlign: 'center' }}>
-                            <img key={idx} src={row.image_view_file} height="175"></img>
-                          </Col>
-                        </Row>
-                        <span style={{ color: 'white' }}>Keterangan: {this.state.inspection_report.foto_kendaraan && this.state.inspection_report.foto_kendaraan.catatan && this.state.inspection_report.foto_kendaraan.catatan[idx] !== undefined && this.state.inspection_report.foto_kendaraan.catatan[idx].catatan}</span>
+                  <div id_drf={this.props.match.params.id} ref={el => (this.componentRef = el)}>
+                    <Table>
+                      <thead style={{ backgroundColor: 'red' }}>
+                        <tr>
+                          <th style={{ color: 'white', fontSize: 20 }}>Laporan Kondisi Kendaraan No. {this.state.inspection_report && this.state.inspection_report.informasi_umum && this.state.inspection_report.informasi_umum.cl_id}</th>
+                          <th style={{ color: 'white', fontSize: 20, textAlign: 'right' }}>Tanggal Inspeksi: 08/11/2022</th>
+                        </tr>
+                      </thead>
+                    </Table>
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_informasi_umum && this.state.inspection_report && this.state.inspection_report.informasi_umum && this.state.keys_informasi_umum.map((e, i) => (
+                              e !== 'cl_id' && i < 10 && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ').replace('no', 'no.')}</td>
+                                  <td>{this.state.inspection_report.informasi_umum[e]}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
                       </Col>
-                    )}
-                  </Row>
-                </div>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_informasi_umum && this.state.inspection_report && this.state.inspection_report.informasi_umum && this.state.keys_informasi_umum.map((e, i) => (
+                              e !== 'cl_id' && i >= 10 && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ').replace('no', 'no.')}</td>
+                                  <td>{[14, 18].includes(i) ? convertDateFormat(this.state.inspection_report.informasi_umum[e]) : this.state.inspection_report.informasi_umum[e]}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <Table>
+                      <thead style={{ backgroundColor: 'red' }}>
+                        <tr>
+                          <th style={{ color: 'white', fontSize: 20 }}>Dokumen</th>
+                        </tr>
+                      </thead>
+                    </Table>
+                    {this.keterangan()}
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_dokumen && this.state.inspection_report && this.state.inspection_report.dokumen && this.state.keys_dokumen.map((e, i) => (
+                              i < Math.floor(this.state.keys_dokumen.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{i === 0 ? e.toUpperCase() : e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.dokumen[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_dokumen && this.state.inspection_report && this.state.inspection_report.dokumen && this.state.keys_dokumen.map((e, i) => (
+                              i >= Math.floor(this.state.keys_dokumen.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{i === 2 ? e.toUpperCase() : e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.dokumen[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <Table>
+                      <thead style={{ backgroundColor: 'red' }}>
+                        <tr>
+                          <th style={{ color: 'white', fontSize: 20 }}>Fitur</th>
+                        </tr>
+                      </thead>
+                    </Table>
+                    {this.keterangan()}
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_fitur && this.state.inspection_report && this.state.inspection_report.fitur && this.state.keys_fitur.map((e, i) => (
+                              i < Math.floor(this.state.keys_fitur.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.fitur[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_fitur && this.state.inspection_report && this.state.inspection_report.fitur && this.state.keys_fitur.map((e, i) => (
+                              i >= Math.floor(this.state.keys_fitur.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.fitur[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <Table>
+                      <thead style={{ backgroundColor: 'red' }}>
+                        <tr>
+                          <th style={{ color: 'white', fontSize: 20 }}>Data Ban</th>
+                        </tr>
+                      </thead>
+                    </Table>
+                    {this.keterangan()}
+                    <Row>
+                      <Col md='6'>
+                        <Table>
+                          <thead>
+                            <tr>
+                              <th style={{ textAlign: 'center' }}>Posisi Ban</th>
+                              <th style={{ textAlign: 'center' }}>Tipe Velg</th>
+                              <th style={{ textAlign: 'center' }}>Ketebalan Ban</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {this.state.keys_data_ban_tipe_velg && this.state.keys_data_ban_ketebalan_ban && this.state.inspection_report && this.state.inspection_report.data_ban && this.state.inspection_report.data_ban.tipe_velg && this.state.keys_data_ban_tipe_velg.map((e, i) => (
+                              (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize', textAlign: 'center' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ textAlign: 'center' }}>{this.state.inspection_report.data_ban.tipe_velg[e]}</td>
+                                  <td style={{ textAlign: 'center' }}>{this.symbolConverter(this.state.inspection_report.data_ban.ketebalan_ban[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <Table>
+                      <thead style={{ backgroundColor: 'red' }}>
+                        <tr>
+                          <th style={{ color: 'white', fontSize: 20 }}>Poin Inspeksi</th>
+                        </tr>
+                      </thead>
+                    </Table>
+                    {this.keterangan()}
+                    <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Interior - Dashboard & Kelistrikan</strong></div>
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_interior_dashboard_kelistrikan && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.dashboard_kelistrikan && this.state.keys_interior_dashboard_kelistrikan.map((e, i) => (
+                              i < Math.floor(this.state.keys_interior_dashboard_kelistrikan.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.dashboard_kelistrikan[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_interior_dashboard_kelistrikan && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.dashboard_kelistrikan && this.state.keys_interior_dashboard_kelistrikan.map((e, i) => (
+                              i >= Math.floor(this.state.keys_interior_dashboard_kelistrikan.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.dashboard_kelistrikan[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Interior - Instrumen</strong></div>
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_interior_instrumen && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.instrumen && this.state.keys_interior_instrumen.map((e, i) => (
+                              i < Math.floor(this.state.keys_interior_instrumen.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.instrumen[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_interior_instrumen && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.instrumen && this.state.keys_interior_instrumen.map((e, i) => (
+                              i >= Math.floor(this.state.keys_interior_instrumen.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.instrumen[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Interior - Jok & Trim</strong></div>
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_interior_jok_trim && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.jok_trim && this.state.keys_interior_jok_trim.map((e, i) => (
+                              i < Math.floor(this.state.keys_interior_jok_trim.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.jok_trim[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_interior_jok_trim && this.state.inspection_report && this.state.inspection_report.interior && this.state.inspection_report.interior.jok_trim && this.state.keys_interior_jok_trim.map((e, i) => (
+                              i >= Math.floor(this.state.keys_interior_jok_trim.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.interior.jok_trim[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Eksterior - Body</strong></div>
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_eksterior_body && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.body && this.state.keys_eksterior_body.map((e, i) => (
+                              i < Math.floor(this.state.keys_eksterior_body.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.body[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_eksterior_body && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.body && this.state.keys_eksterior_body.map((e, i) => (
+                              i >= Math.floor(this.state.keys_eksterior_body.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.body[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Eksterior - Kaca & Lampu</strong></div>
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_eksterior_kaca_lampu && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.kaca_lampu && this.state.keys_eksterior_kaca_lampu.map((e, i) => (
+                              i < Math.floor(this.state.keys_eksterior_kaca_lampu.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.kaca_lampu[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_eksterior_kaca_lampu && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.kaca_lampu && this.state.keys_eksterior_kaca_lampu.map((e, i) => (
+                              i >= Math.floor(this.state.keys_eksterior_kaca_lampu.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.kaca_lampu[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Eksterior - Under Body</strong></div>
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_eksterior_under_body && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.under_body && this.state.keys_eksterior_under_body.map((e, i) => (
+                              i < Math.floor(this.state.keys_eksterior_under_body.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.under_body[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_eksterior_under_body && this.state.inspection_report && this.state.inspection_report.eksterior && this.state.inspection_report.eksterior.under_body && this.state.keys_eksterior_under_body.map((e, i) => (
+                              i >= Math.floor(this.state.keys_eksterior_under_body.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.eksterior.under_body[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Mesin - Oli & Cairan</strong></div>
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_mesin_oli_dan_cairan && this.state.inspection_report && this.state.inspection_report.mesin && this.state.inspection_report.mesin.oli_dan_cairan && this.state.keys_mesin_oli_dan_cairan.map((e, i) => (
+                              i < Math.floor(this.state.keys_mesin_oli_dan_cairan.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ').replace('at', 'AT')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.mesin.oli_dan_cairan[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_mesin_oli_dan_cairan && this.state.inspection_report && this.state.inspection_report.mesin && this.state.inspection_report.mesin.oli_dan_cairan && this.state.keys_mesin_oli_dan_cairan.map((e, i) => (
+                              i >= Math.floor(this.state.keys_mesin_oli_dan_cairan.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.mesin.oli_dan_cairan[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Mesin - Ruang Mesin</strong></div>
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_mesin_ruang_mesin && this.state.inspection_report && this.state.inspection_report.mesin && this.state.inspection_report.mesin.ruang_mesin && this.state.keys_mesin_ruang_mesin.map((e, i) => (
+                              i < Math.floor(this.state.keys_mesin_ruang_mesin.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.mesin.ruang_mesin[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_mesin_ruang_mesin && this.state.inspection_report && this.state.inspection_report.mesin && this.state.inspection_report.mesin.ruang_mesin && this.state.keys_mesin_ruang_mesin.map((e, i) => (
+                              i >= Math.floor(this.state.keys_mesin_ruang_mesin.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.mesin.ruang_mesin[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Tambahan - Kelengkapan</strong></div>
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_tambahan_kelengkapan && this.state.inspection_report && this.state.inspection_report.tambahan_kelengkapan && this.state.keys_tambahan_kelengkapan.map((e, i) => (
+                              i < Math.floor(this.state.keys_tambahan_kelengkapan.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.tambahan_kelengkapan[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_tambahan_kelengkapan && this.state.inspection_report && this.state.inspection_report.tambahan_kelengkapan && this.state.keys_tambahan_kelengkapan.map((e, i) => (
+                              i >= Math.floor(this.state.keys_tambahan_kelengkapan.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.tambahan_kelengkapan[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Test Drive</strong></div>
+                    <Row>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_test_drive && this.state.inspection_report && this.state.inspection_report.test_drive && this.state.keys_test_drive.map((e, i) => (
+                              i < Math.floor(this.state.keys_test_drive.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.test_drive[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                      <Col>
+                        <Table>
+                          <tbody>
+                            {this.state.keys_test_drive && this.state.inspection_report && this.state.inspection_report.test_drive && this.state.keys_test_drive.map((e, i) => (
+                              i >= Math.floor(this.state.keys_test_drive.length / 2) && (
+                                <tr>
+                                  <td style={{ textTransform: 'capitalize' }}>{e.replaceAll('_', ' ')}</td>
+                                  <td style={{ width: '50%' }}>{this.symbolConverter(this.state.inspection_report.test_drive[e])}</td>
+                                </tr>
+                              )
+                            ))}
+                          </tbody>
+                        </Table>
+                      </Col>
+                    </Row>
+                    <div style={{ color: 'white', fontSize: 16, marginBottom: 16 }}><strong>Foto Kendaraan</strong></div>
+                    <Row>
+                      {this.state.foto_kendaraan.map((row, idx) =>
+                        <Col md="3" lg="3" style={{ textAlign: 'center', margin: '20px 0px' }}>
+                          <Row style={{ marginBottom: 16 }}>
+                            <Col style={{ textAlign: 'center' }}>
+                              <img key={idx} src={row.image_view_file} height="175"></img>
+                            </Col>
+                          </Row>
+                          <span style={{ color: 'white' }}>Keterangan: {this.state.inspection_report.foto_kendaraan && this.state.inspection_report.foto_kendaraan.catatan && this.state.inspection_report.foto_kendaraan.catatan[idx] !== undefined && this.state.inspection_report.foto_kendaraan.catatan[idx].catatan}</span>
+                        </Col>
+                      )}
+                    </Row>
+                  </div>
+                </CardBody>
+              </Card>) : (
+              <CardBody>
+                <CardTitle tag="h4">Inspection Report is not available</CardTitle>
               </CardBody>
-            </Card>
+            )}
           </Col>
         </Row>
       </div>
